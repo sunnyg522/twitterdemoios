@@ -8,12 +8,16 @@
 
 import UIKit
 
+
+
 class TweetViewViewController: UIViewController,UITableViewDataSource,UITableViewDelegate {
    
 
     @IBOutlet weak var tableView: UITableView!
     var tweets: [Tweet]!
     var refreshControl: UIRefreshControl!
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
@@ -89,6 +93,22 @@ class TweetViewViewController: UIViewController,UITableViewDataSource,UITableVie
         })
     }
     
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+       // if segue.identifier == "detailTweetViewSegue"{
+            print("insider Detail View Seguea")
+        
+            let cell = sender as! UITableViewCell
+            let indexPath = tableView.indexPathForCell(cell);
+            let tweet = tweets![indexPath!.row]
+                print(tweet.text)
+            let tweetDetailViewController = segue.destinationViewController as! DetailsTweetViewController
+            tweetDetailViewController.tweet = tweet
+        
+            
+       // }
+        
+    }
+    
     func delay(delay:Double, closure:()->()) {
         dispatch_after(
             dispatch_time(
@@ -97,14 +117,15 @@ class TweetViewViewController: UIViewController,UITableViewDataSource,UITableVie
             ),
             dispatch_get_main_queue(), closure)
     }
-    /*
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+//        
+//        let navigationController = segue.destinationViewController as! UINavigationController
+//        let composeTweetController = navigationController.topViewController as! ComposeTweetViewController
+//       // composeTweetController.delegate = self
+//        
+//    }
+    
 }
