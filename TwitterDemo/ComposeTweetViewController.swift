@@ -14,16 +14,12 @@ import UIKit
 
 class ComposeTweetViewController: UIViewController {
 
+    @IBOutlet weak var tweetViewText: UITextView!
     @IBOutlet weak var profileImage: UIImageView!
 
-    weak var delegate: ComposeTweetViewControllerDelegate?
-    
-    @IBAction func onCancelBarButton(sender: AnyObject) {
-        dismissViewControllerAnimated(true, completion: nil)
-    }
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        profileImage.setImageWithURL((User.currentUser?.profileUrl)!)
         // Do any additional setup after loading the view.
     }
 

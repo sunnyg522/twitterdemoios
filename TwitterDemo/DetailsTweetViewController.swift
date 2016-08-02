@@ -13,34 +13,34 @@ class DetailsTweetViewController: UIViewController {
     @IBAction func onBackButton(sender: AnyObject) {
         dismissViewControllerAnimated(true, completion: nil)
     }
-  
-    @IBOutlet weak var profileImageLabel: UIImageView!
-    @IBOutlet weak var likeCountLabel: UILabel!
-    @IBOutlet weak var tweetCountLabel: UILabel!
-    @IBOutlet weak var screenNameLable: UILabel!
-    @IBOutlet weak var userNameLabel: UILabel!
-    @IBOutlet weak var tweetTextLabel: UILabel!
     
+    @IBOutlet weak var likesCountLabel: UILabel!
+    @IBOutlet weak var reTweetCountLabel: UILabel!
+    @IBOutlet weak var tweetTextLabel: UILabel!
+    @IBOutlet weak var screenNameLabel: UILabel!
+    @IBOutlet weak var userNameLabel: UILabel!
+    @IBOutlet weak var profileImage: UIImageView!
     var tweet: Tweet!
     override func viewDidLoad() {
         super.viewDidLoad()
-        screenNameLable.text = tweet.user?.screenname as? String
+        screenNameLabel.text = tweet.user?.screenname as? String
         userNameLabel.text = tweet.user?.name as? String
         tweetTextLabel.text = tweet.text
-        profileImageLabel.setImageWithURL(tweet.user.profileUrl!)
+        profileImage.setImageWithURL(tweet.user.profileUrl!)
         if tweet.retweetCount != 0{
-            tweetCountLabel.text  = "\(tweet.retweetCount)"
+            reTweetCountLabel.text  = "\(tweet.retweetCount)"
         }else{
-            tweetCountLabel.text = ""
+            reTweetCountLabel.text = ""
         }
         if tweet.retweetCount != 0{
-            likeCountLabel.text = "\(tweet.favoritesCount)"
+            likesCountLabel.text = "\(tweet.favoritesCount)"
         }
         else
         {
-            likeCountLabel.text = ""
+            likesCountLabel.text = ""
         }
-
+        profileImage.layer.cornerRadius = 3
+        profileImage.clipsToBounds = true
         // Do any additional setup after loading the view.
     }
 

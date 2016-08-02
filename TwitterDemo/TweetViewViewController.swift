@@ -15,9 +15,7 @@ class TweetViewViewController: UIViewController,UITableViewDataSource,UITableVie
 
     @IBOutlet weak var tableView: UITableView!
     var tweets: [Tweet]!
-    var refreshControl: UIRefreshControl!
 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
@@ -26,8 +24,9 @@ class TweetViewViewController: UIViewController,UITableViewDataSource,UITableVie
         //tableView.estimatedRowHeight = 102
         
         
-        refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(onRefresh), forControlEvents: .ValueChanged)
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        tableView.insertSubview(refreshControl, atIndex: 0)
         
         TwitterClient.sharedInstance.homeTimeLine({ (tweets:[Tweet]) in
             self.tweets = tweets
@@ -72,40 +71,58 @@ class TweetViewViewController: UIViewController,UITableViewDataSource,UITableVie
     TwitterClient.sharedInstance.logout()
     }
     
-    func onRefresh() {
-        print("Begining of on refresh")
-        TwitterClient.sharedInstance.homeTimeLine({ (tweets:[Tweet]) in
-            self.tweets = tweets
-            self.tableView.reloadData()
-            print("Inside reloading")
-            for tweet in tweets
-            {
-                //print(tweet.text)
-                //print(tweet.text)
-                //print(tweet.user?.profileUrl)
-            }
-            
-        }) { (error:NSError) in
-            print("Error:\(error.localizedDescription)")
-        }
-        delay(2, closure: {
-            self.refreshControl.endRefreshing()
-        })
-    }
+//    func onRefresh() {
+//        print("Begining of on refresh")
+//        TwitterClient.sharedInstance.homeTimeLine({ (tweets:[Tweet]) in
+//            self.tweets = tweets
+//            self.tableView.reloadData()
+//            print("Inside reloading")
+//            for tweet in tweets
+//            {
+//                //print(tweet.text)
+//                //print(tweet.text)
+//                //print(tweet.user?.profileUrl)
+//            }
+//            
+//        }) { (error:NSError) in
+//            print("Error:\(error.localizedDescription)")
+//        }
+//        delay(2, closure: {
+//            self.refreshControl.endRefreshing()
+//        })
+//    }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-       // if segue.identifier == "detailTweetViewSegue"{
+        if segue.identifier == "detailTweetViewSegue"{
             print("insider Detail View Seguea")
-        
             let cell = sender as! UITableViewCell
             let indexPath = tableView.indexPathForCell(cell);
             let tweet = tweets![indexPath!.row]
                 print(tweet.text)
             let tweetDetailViewController = segue.destinationViewController as! DetailsTweetViewController
             tweetDetailViewController.tweet = tweet
+        }else if segue.identifier == "composeViewController"
+        {
+            segue.destinationViewController as! ComposeTweetViewController
+        }
         
+    }
+    
+    func refreshControlAction(refreshControl: UIRefreshControl) {
+        
+        TwitterClient.sharedInstance.homeTimeLine({ (tweets: [Tweet]) -> () in
+            self.tweets = tweets
+            self.tableView.reloadData()
+            refreshControl.endRefreshing()
+//            for tweet in tweets{
+//                print(tweet.text)
+//            }
             
-       // }
+            }, failure: { (error: NSError) -> () in
+                print(error.localizedDescription)
+        })
+        
+        
         
     }
     
