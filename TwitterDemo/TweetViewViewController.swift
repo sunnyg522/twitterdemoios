@@ -13,10 +13,18 @@ class TweetViewViewController: UIViewController,UITableViewDataSource,UITableVie
 
     @IBOutlet weak var tableView: UITableView!
     var tweets: [Tweet]!
+    var refreshControl: UIRefreshControl!
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
+        //tableView.rowHeight = UITableViewAutomaticDimension
+        //tableView.estimatedRowHeight = 102
+        
+        
+        refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(onRefresh), forControlEvents: .ValueChanged)
+        
         TwitterClient.sharedInstance.homeTimeLine({ (tweets:[Tweet]) in
             self.tweets = tweets
             self.tableView.reloadData()
@@ -24,7 +32,7 @@ class TweetViewViewController: UIViewController,UITableViewDataSource,UITableVie
             {
                 //print(tweet.text)
                 //print(tweet.text)
-                print(tweet.user?.profileUrl)
+                //print(tweet.user?.profileUrl)
             }
             
         }) { (error:NSError) in
@@ -58,6 +66,36 @@ class TweetViewViewController: UIViewController,UITableViewDataSource,UITableVie
 
     @IBAction func onLogOutButton(sender: AnyObject) {
     TwitterClient.sharedInstance.logout()
+    }
+    
+    func onRefresh() {
+        print("Begining of on refresh")
+        TwitterClient.sharedInstance.homeTimeLine({ (tweets:[Tweet]) in
+            self.tweets = tweets
+            self.tableView.reloadData()
+            print("Inside reloading")
+            for tweet in tweets
+            {
+                //print(tweet.text)
+                //print(tweet.text)
+                //print(tweet.user?.profileUrl)
+            }
+            
+        }) { (error:NSError) in
+            print("Error:\(error.localizedDescription)")
+        }
+        delay(2, closure: {
+            self.refreshControl.endRefreshing()
+        })
+    }
+    
+    func delay(delay:Double, closure:()->()) {
+        dispatch_after(
+            dispatch_time(
+                DISPATCH_TIME_NOW,
+                Int64(delay * Double(NSEC_PER_SEC))
+            ),
+            dispatch_get_main_queue(), closure)
     }
     /*
     // MARK: - Navigation

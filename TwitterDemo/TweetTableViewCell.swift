@@ -9,25 +9,49 @@
 import UIKit
 
 class TweetTableViewCell: UITableViewCell {
+    @IBOutlet weak var timeLabel: UILabel!
 
+    @IBOutlet weak var likesCountLabel: UILabel!
+    @IBOutlet weak var tweetCount: UILabel!
     @IBOutlet weak var tweetText: UILabel!
     @IBOutlet weak var screenNameLabel: UILabel!
     @IBOutlet weak var userNameLabel: UILabel!
+    @IBAction func onRetweetImage(sender: AnyObject) {
+    }
   
-    @IBOutlet weak var thumbImageView: UIImageView!
+    @IBOutlet weak var replyTweetButton: UIButton!
+    @IBOutlet weak var retweetButton: UIButton!
+    @IBOutlet weak var thumImage: UIImageView!
         var tweet: Tweet!{
         didSet{
             screenNameLabel.text = tweet.user?.screenname as? String
             userNameLabel.text = tweet.user?.name as? String
             tweetText.text = tweet.text
-            let url = NSURL(fileURLWithPath: "http://pbs.twimg.com/profile_images/615598832726970372/jsK-gBSt_normal.png")
-            thumbImageView.setImageWithURL(url)
-            //thumbImageView.setImageWithURL(business!.imageURL!)
+            thumImage.setImageWithURL(tweet.user.profileUrl!)
+            if tweet.retweetCount != 0{
+            tweetCount.text  = "\(tweet.retweetCount)"
+            }else{
+                tweetCount.text = ""
+            }
+            if tweet.retweetCount != 0{
+                likesCountLabel.text = "\(tweet.favoritesCount)"
+            }
+            else
+            {
+                likesCountLabel.text = ""
+            }
+            
+//            retweetButton.setImage(UIImage(named: "retweet"), forState: UIControlState.Normal)
+//            replyTweetButton.setImage(UIImage(named: "retweet"), forState: UIControlState.Normal)
         }
   
     }
     override func awakeFromNib() {
         super.awakeFromNib()
+        thumImage.layer.cornerRadius = 3
+        thumImage.clipsToBounds = true
+        
+        tweetText.preferredMaxLayoutWidth = tweetText.frame.size.width
         // Initialization code
     }
 
