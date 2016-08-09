@@ -18,21 +18,41 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
-        if User.currentUser != nil
-        {
-            print("There is a current User ")
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let vc  = storyboard.instantiateViewControllerWithIdentifier("TweetsNavigationController")
+        
+        if User.currentUser != nil {
+            print ("There is  current User")
+            let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+            let vc = storyBoard.instantiateViewControllerWithIdentifier("HamburgerViewController")
+            
             window?.rootViewController = vc
-            
         }
-        NSNotificationCenter.defaultCenter().addObserverForName(User.userDidLogOutNotification , object: nil, queue: NSOperationQueue.mainQueue()) { (NSNotification) -> Void in
+        
+        
+        let hamburgerViewController = window!.rootViewController as! HamburgerViewController
+        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+        let menuViewController = storyBoard.instantiateViewControllerWithIdentifier("MenuViewController") as! MenuViewController
+        
+        menuViewController.hamburgerViewController = hamburgerViewController
+        hamburgerViewController.menuViewController = menuViewController
+        
             
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let vc  = storyboard.instantiateInitialViewController()
-            self.window?.rootViewController = vc
-        }
         // Override point for customization after application launch.
+//        
+//        if User.currentUser != nil
+//        {
+//            print("There is a current User ")
+//            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//            let vc  = storyboard.instantiateViewControllerWithIdentifier("TweetsNavigationController")
+//            window?.rootViewController = vc
+//            
+//        }
+//        NSNotificationCenter.defaultCenter().addObserverForName(User.userDidLogOutNotification , object: nil, queue: NSOperationQueue.mainQueue()) { (NSNotification) -> Void in
+//            
+//            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//            let vc  = storyboard.instantiateInitialViewController()
+//            self.window?.rootViewController = vc
+//        }
+
         return true
     }
 
